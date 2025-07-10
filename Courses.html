@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses | Reality World</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
+    <style>
+        /* Modern CSS for Reality World Courses Page */
+        :root {
+            --primary: #0f0c29;
+            --secondary: #302b63;
+            --accent: #ff2d75;
+            --accent2: #00c9ff;
+            --text: #ffffff;
+            --text-secondary: #d0d0d0;
+            --card-bg: rgba(20, 15, 50, 0.6);
+            --card-hover: rgba(30, 25, 70, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeDown 1s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: pulse 3s infinite alternate;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            text-shadow: 0 0 15px rgba(255, 45, 117, 0.3);
+        }
+
+        .logo-text::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 10px;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-text::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent), var(--accent2));
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(255, 45, 117, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 45, 117, 0.6);
+        }
+
+        /* Courses Content */
+        .courses-content {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 3px;
+        }
+
+        .view-all {
+            color: var(--accent2);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .view-all:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 45, 117, 0.3);
+            background: var(--card-hover);
+        }
+
+        .course-thumbnail {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .course-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .course-card:hover .course-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn i {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-left: 5px;
+        }
+
+        .course-card:hover .play-btn {
+            opacity: 1;
+        }
+
+        .course-duration {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+
+        .course-level {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .level-beginner {
+            background: rgba(0, 200, 83, 0.2);
+            color: #00c853;
+        }
+
+        .level-intermediate {
+            background: rgba(255, 171, 0, 0.2);
+            color: #ffab00;
+        }
+
+        .level-advanced {
+            background: rgba(255, 45, 85, 0.2);
+            color: #ff2d55;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .course-meta i {
+            margin-right: 5px;
+            color: var(--accent);
+        }
+
+        .course-instructor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .instructor-avatar {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .instructor-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .course-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .enroll-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .enroll-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 45, 117, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 45, 117, 0.4);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 45, 117, 0.5);
+            }
+
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 20px rgba(255, 45, 117, 0.8);
+            }
+
+            100% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 45, 117, 0.5);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .courses-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            nav ul {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 40px 0;
+                min-height: 50vh;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .course-card {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Vanta.js Background -->
+    <div id="vanta-bg"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="logo-text"><i>Cyber World</i></div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Go Home</a></li>
+                  
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Expand Your Skills with Our Courses</h1>
+                <p>Learn from industry experts and master the latest technologies in programming, web development, and
+                    3D reality creation.</p>
+                <a href="https://github.com/cyber123822" class="cta-button">Explore Projects</a>
+            </div>
+        </section>
+
+        <!-- Courses Content -->
+        <div class="courses-content">
+            <!-- Programming Courses Section -->
+            <div class="section-header" id="programming-courses">
+                <h2 class="section-title">Programming Courses</h2>
+                <a href="#" class="view-all">View All Programming</a>
+            </div>
+
+            <div class="courses-grid">
+                <!-- Python Course 1 -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/gfDE2a7MKjA/maxresdefault.jpg" alt="Python Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/gfDE2a7MKjA', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">11h 52m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">Python Tutorial For Beginners (With Notes)</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 155 Lessons</span>
+                            <span><i class="fas fa-users"></i> 2M+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Learn Python programming from scratch with this comprehensive
+                            beginner tutorial series.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/gfDE2a7MKjA', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- JavaScript Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/hKB-YGF14SY/maxresdefault.jpg" alt="JavaScript Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/hKB-YGF14SY', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">6h 22m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">JavaScript Tutorial For Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 52 Lessons</span>
+                            <span><i class="fas fa-users"></i> 1.2M+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Master JavaScript fundamentals with this beginner-friendly
+                            tutorial series.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/hKB-YGF14SY', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- React Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/tiLWCNFzThE/maxresdefault.jpg" alt="React Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/tiLWCNFzThE', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">4h 18m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-intermediate">Intermediate</span>
+                        <h3 class="course-title">React JS Tutorial for Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 28 Lessons</span>
+                            <span><i class="fas fa-users"></i> 850K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Learn React.js from scratch and build modern web applications.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/tiLWCNFzThE', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Node.js Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/yEHCfRWz-EI/maxresdefault.jpg" alt="Node.js Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/yEHCfRWz-EI', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">3h 45m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-intermediate">Intermediate</span>
+                        <h3 class="course-title">Node.js Tutorial For Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 22 Lessons</span>
+                            <span><i class="fas fa-users"></i> 650K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Learn backend development with Node.js and build powerful
+                            server-side applications.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/yEHCfRWz-EI', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- C++ Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/yNVnjI8p3NQ/maxresdefault.jpg" alt="C++ Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/yNVnjI8p3NQ', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">8h 15m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">C++ Tutorial For Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 65 Lessons</span>
+                            <span><i class="fas fa-users"></i> 1.5M+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Master C++ programming fundamentals with this comprehensive
+                            tutorial series.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/yNVnjI8p3NQ', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Java Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/BGTx91t8q50/maxresdefault.jpg" alt="Java Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/BGTx91t8q50', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">12h 30m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">Java Tutorial For Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 80 Lessons</span>
+                            <span><i class="fas fa-users"></i> 1.8M+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Learn Java programming from scratch with this detailed tutorial
+                            series.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/BGTx91t8q50', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Development Courses -->
+            <div class="section-header">
+                <h2 class="section-title">Web Development</h2>
+                <a href="#" class="view-all">View All Web Dev</a>
+            </div>
+
+            <div class="courses-grid">
+                <!-- HTML/CSS Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/BsDoLVMnmZs/maxresdefault.jpg" alt="HTML/CSS Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/BsDoLVMnmZs', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">6h 45m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">HTML & CSS Tutorial for Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 40 Lessons</span>
+                            <span><i class="fas fa-users"></i> 1.1M+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Learn HTML and CSS to build beautiful websites from scratch.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/BsDoLVMnmZs', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Full Stack Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/ER9SspLe4Hg/maxresdefault.jpg" alt="Full Stack Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/ER9SspLe4Hg', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">5h 30m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-intermediate">Intermediate</span>
+                        <h3 class="course-title">Full Stack Web Development</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 35 Lessons</span>
+                            <span><i class="fas fa-users"></i> 750K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Learn full stack web development with HTML, CSS, JavaScript, and
+                            Node.js.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/ER9SspLe4Hg', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- MERN Stack Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/98BzS5Oz5E4/maxresdefault.jpg" alt="MERN Stack Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/98BzS5Oz5E4', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">7h 15m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-advanced">Advanced</span>
+                        <h3 class="course-title">MERN Stack Tutorial</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 45 Lessons</span>
+                            <span><i class="fas fa-users"></i> 500K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">CH</div>
+                            <div class="instructor-name">CodeWithHarry</div>
+                        </div>
+                        <p class="course-description">Build full stack applications with MongoDB, Express, React, and
+                            Node.js.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/98BzS5Oz5E4', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D Development Courses -->
+            <div class="section-header">
+                <h2 class="section-title">3D & Reality Development</h2>
+                <a href="#" class="view-all">View All 3D Courses</a>
+            </div>
+
+            <div class="courses-grid">
+                <!-- Three.js Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/6FyG-6UJSkM/maxresdefault.jpg" alt="Three.js Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/6FyG-6UJSkM', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">7h 35m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-intermediate">Intermediate</span>
+                        <h3 class="course-title">Three.js Crash Course</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 25 Lessons</span>
+                            <span><i class="fas fa-users"></i> 320K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">DL</div>
+                            <div class="instructor-name">DesignCourse</div>
+                        </div>
+                        <p class="course-description">Learn Three.js to create stunning 3D web experiences with
+                            JavaScript.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/6FyG-6UJSkM', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Blender Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/TPrnSACiTJ4/maxresdefault.jpg" alt="Blender Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/TPrnSACiTJ4', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">4h 10m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">Blender 3D Tutorial for Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 30 Lessons</span>
+                            <span><i class="fas fa-users"></i> 1.2M+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">BB</div>
+                            <div class="instructor-name">Blender Guru</div>
+                        </div>
+                        <p class="course-description">Learn 3D modeling, animation, and rendering with Blender.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/TPrnSACiTJ4', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Unity VR Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/pJ2FY3k7R7E/maxresdefault.jpg" alt="Unity VR Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/pJ2FY3k7R7E', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">5h 45m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-intermediate">Intermediate</span>
+                        <h3 class="course-title">Unity VR Development Tutorial</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 35 Lessons</span>
+                            <span><i class="fas fa-users"></i> 450K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">VB</div>
+                            <div class="instructor-name">Valem</div>
+                        </div>
+                        <p class="course-description">Create immersive VR experiences with Unity and C#.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/pJ2FY3k7R7E', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Unreal Engine Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/k-zMkzmduqI/maxresdefault.jpg" alt="Unreal Engine Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/k-zMkzmduqI', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">8h 20m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-advanced">Advanced</span>
+                        <h3 class="course-title">Unreal Engine 5 Beginner Tutorial</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 40 Lessons</span>
+                            <span><i class="fas fa-users"></i> 600K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">UE</div>
+                            <div class="instructor-name">Unreal Sensei</div>
+                        </div>
+                        <p class="course-description">Learn game development with Unreal Engine 5's powerful tools.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/k-zMkzmduqI', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More Programming Languages -->
+            <div class="section-header">
+                <h2 class="section-title">More Programming Languages</h2>
+                <a href="#" class="view-all">View All Languages</a>
+            </div>
+
+            <div class="courses-grid">
+                <!-- C# Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/GhQdlIFylQ8/maxresdefault.jpg" alt="C# Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/GhQdlIFylQ8', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">4h 30m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">C# Tutorial For Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 45 Lessons</span>
+                            <span><i class="fas fa-users"></i> 950K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">MM</div>
+                            <div class="instructor-name">Mike Dane</div>
+                        </div>
+                        <p class="course-description">Learn C# programming fundamentals for game development and
+                            applications.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/GhQdlIFylQ8', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Ruby Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/t_ispmWmdjY/maxresdefault.jpg" alt="Ruby Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/t_ispmWmdjY', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">3h 55m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-beginner">Beginner</span>
+                        <h3 class="course-title">Ruby Programming Language</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 30 Lessons</span>
+                            <span><i class="fas fa-users"></i> 400K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">DT</div>
+                            <div class="instructor-name">Derek Banas</div>
+                        </div>
+                        <p class="course-description">Complete Ruby programming tutorial for beginners.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/t_ispmWmdjY', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Go Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/YS4e4q9oBaU/maxresdefault.jpg" alt="Go Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/YS4e4q9oBaU', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">3h 20m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-intermediate">Intermediate</span>
+                        <h3 class="course-title">Golang Tutorial for Beginners</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 25 Lessons</span>
+                            <span><i class="fas fa-users"></i> 350K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">TF</div>
+                            <div class="instructor-name">Tech With Tim</div>
+                        </div>
+                        <p class="course-description">Learn Google's Go programming language for efficient system
+                            development.</p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/YS4e4q9oBaU', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+
+                <!-- Rust Course -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        <img src="https://i.ytimg.com/vi/ygL_xcavzQ4/maxresdefault.jpg" alt="Rust Course">
+                        <div class="play-btn" onclick="window.open('https://youtu.be/ygL_xcavzQ4', '_blank')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="course-duration">4h 45m</div>
+                    </div>
+                    <div class="course-content">
+                        <span class="course-level level-advanced">Advanced</span>
+                        <h3 class="course-title">Rust Programming Course</h3>
+                        <div class="course-meta">
+                            <span><i class="fas fa-video"></i> 35 Lessons</span>
+                            <span><i class="fas fa-users"></i> 280K+ Students</span>
+                        </div>
+                        <div class="course-instructor">
+                            <div class="instructor-avatar">DT</div>
+                            <div class="instructor-name">Derek Banas</div>
+                        </div>
+                        <p class="course-description">Learn Rust programming for systems development with memory safety.
+                        </p>
+                        <button class="enroll-btn" onclick="window.open('https://youtu.be/ygL_xcavzQ4', '_blank')">Watch
+                            Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="social-icons">
+                <a href="https://github.com/cyber123822"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-instagram"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-youtube"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">© 2023 Reality World. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xff2d75,
+            backgroundColor: 0x0f0c29,
+            points: 12.00,
+            maxDistance: 22.00,
+            spacing: 18.00
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced 3D/9D Reality Modules</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f0c29;
+            --secondary: #302b63;
+            --accent: #ff2d75;
+            --accent2: #00c9ff;
+            --text: #ffffff;
+            --text-secondary: #d0d0d0;
+            --card-bg: rgba(20, 15, 50, 0.6);
+            --card-hover: rgba(30, 25, 70, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeDown 1s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: pulse 3s infinite alternate;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            text-shadow: 0 0 15px rgba(255, 45, 117, 0.3);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent), var(--accent2));
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(255, 45, 117, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 45, 117, 0.6);
+        }
+
+        /* Modules Section */
+        .modules-section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 3px;
+        }
+
+        .view-all {
+            color: var(--accent2);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .view-all:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .module-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 45, 117, 0.3);
+            background: var(--card-hover);
+        }
+
+        .module-thumbnail {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .module-thumbnail canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .module-content {
+            padding: 20px;
+        }
+
+        .module-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .module-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .module-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(45deg, var(--accent), var(--accent2));
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .module-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 45, 117, 0.4);
+        }
+
+        /* Simulation Container */
+        .simulation-container {
+            height: 600px;
+            margin: 80px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #main-simulation {
+            width: 100%;
+            height: 100%;
+        }
+
+        .simulation-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            z-index: 5;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 45, 117, 0.4);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 45, 117, 0.5);
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 20px rgba(255, 45, 117, 0.8);
+            }
+            100% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 45, 117, 0.5);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .modules-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            nav ul {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 40px 0;
+                min-height: 50vh;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .simulation-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Vanta.js Background -->
+    <div id="vanta-bg"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <div class="logo-text"><i>Cyber Lab</i></div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Go Home</a></li>
+                   
+                </ul>
+            </nav>
+        </header>
+        
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Advanced 3D/9D Reality Modules</h1>
+                <p>Explore multidimensional simulations of DNA, RNA, BARMMAND structures, and theoretical time travel phenomena through our interactive 9D visualization platform.</p>
+                <a href="#dna-sim" class="cta-button">Begin Exploration</a>
+            </div>
+        </section>
+        
+        <!-- DNA Simulation -->
+        <section class="modules-section" id="dna-sim">
+            <div class="section-header">
+                <h2 class="section-title">DNA Double Helix Simulation</h2>
+                <a href="#" class="view-all">View All Biology Modules</a>
+            </div>
+            
+            <div class="modules-grid">
+                <div class="module-card">
+                    <div class="module-thumbnail">
+                        <canvas id="dna-canvas"></canvas>
+                    </div>
+                    <div class="module-content">
+                        <h3 class="module-title">DNA Double Helix</h3>
+                        <p class="module-description">Interactive 3D model of the DNA double helix structure with base pair visualization and replication simulation.</p>
+                        <a href="#" class="module-btn">Explore DNA</a>
+                    </div>
+                </div>
+                
+                <div class="module-card">
+                    <div class="module-thumbnail">
+                        <canvas id="rna-canvas"></canvas>
+                    </div>
+                    <div class="module-content">
+                        <h3 class="module-title">RNA Structure</h3>
+                        <p class="module-description">Explore the single-stranded RNA structure with dynamic folding simulation and protein synthesis visualization.</p>
+                        <a href="#" class="module-btn">Explore RNA</a>
+                    </div>
+                </div>
+                
+                <div class="module-card">
+                    <div class="module-thumbnail">
+                        <canvas id="protein-canvas"></canvas>
+                    </div>
+                    <div class="module-content">
+                        <h3 class="module-title">Protein Folding</h3>
+                        <p class="module-description">Real-time simulation of protein folding with energy state visualization and molecular interaction analysis.</p>
+                        <a href="#" class="module-btn">Explore Proteins</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- BARMMAND Simulation -->
+        <section class="modules-section" id="barmmand-sim">
+            <div class="section-header">
+                <h2 class="section-title">BARMMAND Quantum Structures</h2>
+                <a href="#" class="view-all">View All Quantum Modules</a>
+            </div>
+            
+            <div class="simulation-container">
+                <canvas id="barmmand-simulation"></canvas>
+                <div class="simulation-overlay">
+                    <h3>BARMMAND Quantum Field Simulation</h3>
+                    <p>9D visualization of BARMMAND (Baryonic-Antimatter Resonant Multidimensional Matrix for Advanced Nanostructure Design) quantum structures.</p>
+                    <button class="cta-button">Enter Simulation</button>
+                </div>
+            </div>
+            
+            <div class="modules-grid">
+                <div class="module-card">
+                    <div class="module-thumbnail">
+                        <canvas id="quantum-canvas"></canvas>
+                    </div>
+                    <div class="module-content">
+                        <h3 class="module-title">Quantum Entanglement</h3>
+                        <p class="module-description">Visualize quantum entanglement phenomena in 9D space with probability field visualization.</p>
+                        <a href="#" class="module-btn">Explore Entanglement</a>
+                    </div>
+                </div>
+                
+                <div class="module-card">
+                    <div class="module-thumbnail">
+                        <canvas id="barmmand-mini-canvas"></canvas>
+                    </div>
+                    <div class="module-content">
+                        <h3 class="module-title">BARMMAND Nano</h3>
+                        <p class="module-description">Simplified 5D visualization of BARMMAND nanostructures for educational purposes.</p>
+                        <a href="#" class="module-btn">Explore Nano</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Time Travel Simulation -->
+        <section class="modules-section" id="time-sim">
+            <div class="section-header">
+                <h2 class="section-title">Temporal Dynamics & Time Travel</h2>
+                <a href="#" class="view-all">View All Temporal Modules</a>
+            </div>
+            
+            <div class="simulation-container">
+                <canvas id="time-simulation"></canvas>
+                <div class="simulation-overlay">
+                    <h3>9D Temporal Field Simulation</h3>
+                    <p>Interactive visualization of theoretical time travel mechanics through 9-dimensional spacetime continuum.</p>
+                    <button class="cta-button">Begin Temporal Journey</button>
+                </div>
+            </div>
+            
+            <div class="modules-grid">
+                <div class="module-card">
+                    <div class="module-thumbnail">
+                        <canvas id="wormhole-canvas"></canvas>
+                    </div>
+                    <div class="module-content">
+                        <h3 class="module-title">Wormhole Dynamics</h3>
+                        <p class="module-description">Simulation of Einstein-Rosen bridges with 9D gravitational field visualization.</p>
+                        <a href="#" class="module-btn">Explore Wormholes</a>
+                    </div>
+                </div>
+                
+                <div class="module-card">
+                    <div class="module-thumbnail">
+                        <canvas id="timetravel-canvas"></canvas>
+                    </div>
+                    <div class="module-content">
+                        <h3 class="module-title">Temporal Paradoxes</h3>
+                        <p class="module-description">Interactive exploration of grandfather paradox and other time travel anomalies.</p>
+                        <a href="#" class="module-btn">Explore Paradoxes</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="social-icons">
+                <a href="https://github.com/cyber123822"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-youtube"></i></a>
+                <a href="https://github.com/cyber123822"><i class="fab fa-discord"></i></a>
+            </div>
+            <p class="copyright">© 2023 Reality Lab. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xff2d75,
+            backgroundColor: 0x0f0c29,
+            points: 12.00,
+            maxDistance: 22.00,
+            spacing: 18.00
+        });
+        
+        // DNA Simulation
+        function initDNASimulation() {
+            const canvas = document.getElementById('dna-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera.position.z = 30;
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Create DNA helix
+            const dnaGroup = new THREE.Group();
+            const geometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x00c9ff,
+                specular: 0x111111,
+                shininess: 30
+            });
+            
+            const basePairs = [];
+            const radius = 5;
+            const height = 20;
+            const turns = 3;
+            
+            for (let i = 0; i < 100; i++) {
+                const angle = (i / 100) * Math.PI * 2 * turns;
+                const y = (i / 100) * height - height / 2;
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                
+                // First strand
+                const sphere1 = new THREE.Mesh(geometry, material);
+                sphere1.position.set(x, y, z);
+                dnaGroup.add(sphere1);
+                
+                // Second strand
+                const sphere2 = new THREE.Mesh(geometry, material);
+                sphere2.position.set(-x, y, -z);
+                dnaGroup.add(sphere2);
+                
+                // Base pairs
+                if (i % 5 === 0) {
+                    const baseMaterial = new THREE.MeshPhongMaterial({
+                        color: Math.random() > 0.5 ? 0xff2d75 : 0x00ff88,
+                        transparent: true,
+                        opacity: 0.8
+                    });
+                    
+                    const baseGeometry = new THREE.CylinderGeometry(0.1, 0.1, radius * 2, 8);
+                    const base = new THREE.Mesh(baseGeometry, baseMaterial);
+                    base.rotation.z = Math.PI / 2;
+                    base.position.set(0, y, 0);
+                    dnaGroup.add(base);
+                }
+            }
+            
+            scene.add(dnaGroup);
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                dnaGroup.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle canvas resize
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            });
+        }
+        
+        // RNA Simulation
+        function initRNASimulation() {
+            const canvas = document.getElementById('rna-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera.position.z = 30;
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Create RNA strand
+            const rnaGroup = new THREE.Group();
+            const geometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0xff2d75,
+                specular: 0x111111,
+                shininess: 30
+            });
+            
+            const radius = 5;
+            const height = 20;
+            const turns = 2;
+            
+            for (let i = 0; i < 100; i++) {
+                const angle = (i / 100) * Math.PI * 2 * turns;
+                const y = (i / 100) * height - height / 2;
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.set(x, y, z);
+                rnaGroup.add(sphere);
+                
+                // Add some random folds
+                if (i % 15 === 0 && i > 0 && i < 90) {
+                    const foldAngle = angle + (Math.random() - 0.5) * Math.PI / 2;
+                    const foldRadius = radius * (0.5 + Math.random() * 0.5);
+                    
+                    for (let j = 1; j <= 5; j++) {
+                        const foldY = y + j * 0.2;
+                        const foldX = Math.cos(foldAngle) * foldRadius;
+                        const foldZ = Math.sin(foldAngle) * foldRadius;
+                        
+                        const foldSphere = new THREE.Mesh(geometry, material);
+                        foldSphere.position.set(foldX, foldY, foldZ);
+                        rnaGroup.add(foldSphere);
+                    }
+                }
+            }
+            
+            scene.add(rnaGroup);
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                rnaGroup.rotation.y += 0.005;
+                rnaGroup.rotation.x += 0.002;
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle canvas resize
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            });
+        }
+        
+        // BARMMAND Simulation
+        function initBARMMANDSimulation() {
+            const canvas = document.getElementById('barmmand-simulation');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f0c29);
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera.position.z = 50;
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight1 = new THREE.DirectionalLight(0xff2d75, 0.8);
+            directionalLight1.position.set(5, 5, 5);
+            scene.add(directionalLight1);
+            
+            const directionalLight2 = new THREE.DirectionalLight(0x00c9ff, 0.8);
+            directionalLight2.position.set(-5, -5, -5);
+            scene.add(directionalLight2);
+            
+            // Create BARMMAND structure
+            const barmmandGroup = new THREE.Group();
+            const geometry = new THREE.IcosahedronGeometry(1, 1);
+            
+            // Create central core
+            const coreMaterial = new THREE.MeshPhongMaterial({
+                color: 0x00c9ff,
+                emissive: 0x00c9ff,
+                emissiveIntensity: 0.3,
+                wireframe: true
+            });
+            
+            const core = new THREE.Mesh(
+                new THREE.IcosahedronGeometry(8, 2),
+                coreMaterial
+            );
+            barmmandGroup.add(core);
+            
+            // Create orbiting particles
+            const particleCount = 200;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles in a 9D-inspired pattern
+                const radius = 10 + Math.random() * 20;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                
+                positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = radius * Math.cos(phi);
+                
+                // Add some randomness to simulate higher dimensions
+                if (Math.random() > 0.7) {
+                    positions[i * 3] *= 1.5;
+                    positions[i * 3 + 1] *= 0.7;
+                } else if (Math.random() > 0.5) {
+                    positions[i * 3 + 2] *= 1.3;
+                }
+                
+                // Colors
+                colors[i * 3] = 0.5 + Math.random() * 0.5;
+                colors[i * 3 + 1] = 0.3 + Math.random() * 0.7;
+                colors[i * 3 + 2] = 0.5 + Math.random() * 0.5;
+                
+                // Sizes
+                sizes[i] = 0.5 + Math.random() * 1.5;
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 1,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                sizeAttenuation: true
+            });
+            
+            const particleSystem = new THREE.Points(particles, particleMaterial);
+            barmmandGroup.add(particleSystem);
+            
+            // Create connecting lines
+            const linesGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * 3 * 2);
+            
+            for (let i = 0; i < particleCount; i += 2) {
+                if (i + 1 >= particleCount) break;
+                
+                linePositions[i * 3] = positions[i * 3];
+                linePositions[i * 3 + 1] = positions[i * 3 + 1];
+                linePositions[i * 3 + 2] = positions[i * 3 + 2];
+                
+                linePositions[i * 3 + 3] = positions[(i + 1) * 3];
+                linePositions[i * 3 + 4] = positions[(i + 1) * 3 + 1];
+                linePositions[i * 3 + 5] = positions[(i + 1) * 3 + 2];
+            }
+            
+            linesGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+            
+            const linesMaterial = new THREE.LineBasicMaterial({
+                color: 0xff2d75,
+                transparent: true,
+                opacity: 0.3
+            });
+            
+            const lines = new THREE.LineSegments(linesGeometry, linesMaterial);
+            barmmandGroup.add(lines);
+            
+            scene.add(barmmandGroup);
+            
+            // Add orbit controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate the core
+                core.rotation.x += 0.005;
+                core.rotation.y += 0.007;
+                
+                // Rotate particles to simulate higher dimensions
+                const particlePositions = particles.attributes.position.array;
+                for (let i = 0; i < particleCount; i++) {
+                    // Simulate 4D+ movement by adding subtle position changes
+                    if (i % 3 === 0) {
+                        particlePositions[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.05;
+                    }
+                    if (i % 4 === 0) {
+                        particlePositions[i * 3 + 1] += Math.cos(Date.now() * 0.001 + i) * 0.05;
+                    }
+                    if (i % 5 === 0) {
+                        particlePositions[i * 3 + 2] += Math.sin(Date.now() * 0.001 + i * 2) * 0.05;
+                    }
+                }
+                particles.attributes.position.needsUpdate = true;
+                
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            });
+        }
+        
+        // Time Travel Simulation
+        function initTimeTravelSimulation() {
+            const canvas = document.getElementById('time-simulation');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera.position.z = 40;
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight1 = new THREE.DirectionalLight(0x00c9ff, 1);
+            directionalLight1.position.set(5, 5, 5);
+            scene.add(directionalLight1);
+            
+            const directionalLight2 = new THREE.DirectionalLight(0xff2d75, 1);
+            directionalLight2.position.set(-5, -5, 5);
+            scene.add(directionalLight2);
+            
+            // Create time vortex
+            const vortexGroup = new THREE.Group();
+            
+            // Create spiral timeline
+            const spiralGeometry = new THREE.BufferGeometry();
+            const spiralPoints = 500;
+            const spiralPositions = new Float32Array(spiralPoints * 3);
+            const spiralColors = new Float32Array(spiralPoints * 3);
+            
+            for (let i = 0; i < spiralPoints; i++) {
+                const t = i / spiralPoints * Math.PI * 10;
+                const r = 15 * (1 - i / spiralPoints);
+                
+                spiralPositions[i * 3] = r * Math.cos(t);
+                spiralPositions[i * 3 + 1] = r * Math.sin(t);
+                spiralPositions[i * 3 + 2] = (i / spiralPoints - 0.5) * 40;
+                
+                // Color based on position (blue to red gradient)
+                spiralColors[i * 3] = i / spiralPoints;
+                spiralColors[i * 3 + 1] = 0;
+                spiralColors[i * 3 + 2] = 1 - i / spiralPoints;
+            }
+            
+            spiralGeometry.setAttribute('position', new THREE.BufferAttribute(spiralPositions, 3));
+            spiralGeometry.setAttribute('color', new THREE.BufferAttribute(spiralColors, 3));
+            
+            const spiralMaterial = new THREE.LineBasicMaterial({
+                vertexColors: true,
+                linewidth: 2,
+                transparent: true,
+                opacity: 0.7
+            });
+            
+            const spiral = new THREE.Line(spiralGeometry, spiralMaterial);
+            vortexGroup.add(spiral);
+            
+            // Create time particles
+            const particleCount = 1000;
+            const particles = new THREE.BufferGeometry();
+            const particlePositions = new Float32Array(particleCount * 3);
+            const particleColors = new Float32Array(particleCount * 3);
+            const particleSizes = new Float32Array(particleCount);
+            
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles along the timeline with some randomness
+                const t = Math.random() * Math.PI * 10;
+                const r = 15 * (1 - Math.random()) + 5;
+                const z = (Math.random() - 0.5) * 50;
+                
+                particlePositions[i * 3] = r * Math.cos(t) + (Math.random() - 0.5) * 5;
+                particlePositions[i * 3 + 1] = r * Math.sin(t) + (Math.random() - 0.5) * 5;
+                particlePositions[i * 3 + 2] = z;
+                
+                // Color based on position
+                particleColors[i * 3] = Math.random() > 0.5 ? 0.8 : 0.2;
+                particleColors[i * 3 + 1] = 0;
+                particleColors[i * 3 + 2] = Math.random() > 0.5 ? 0.8 : 0.2;
+                
+                // Size
+                particleSizes[i] = 0.5 + Math.random() * 2;
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+            particles.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
+            
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 1,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                sizeAttenuation: true
+            });
+            
+            const particleSystem = new THREE.Points(particles, particleMaterial);
+            vortexGroup.add(particleSystem);
+            
+            // Create wormhole entrance
+            const wormholeGeometry = new THREE.TorusGeometry(10, 3, 16, 50);
+            const wormholeMaterial = new THREE.MeshPhongMaterial({
+                color: 0x00c9ff,
+                emissive: 0x00c9ff,
+                emissiveIntensity: 0.5,
+                transparent: true,
+                opacity: 0.7,
+                wireframe: true
+            });
+            
+            const wormhole = new THREE.Mesh(wormholeGeometry, wormholeMaterial);
+            wormhole.rotation.x = Math.PI / 2;
+            wormhole.position.z = -25;
+            vortexGroup.add(wormhole);
+            
+            // Create wormhole exit
+            const wormholeExit = new THREE.Mesh(wormholeGeometry, wormholeMaterial);
+            wormholeExit.rotation.x = Math.PI / 2;
+            wormholeExit.position.z = 25;
+            vortexGroup.add(wormholeExit);
+            
+            scene.add(vortexGroup);
+            
+            // Add orbit controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate the vortex
+                vortexGroup.rotation.z += 0.01;
+                
+                // Move particles to simulate time flow
+                const positions = particles.attributes.position.array;
+                for (let i = 0; i < particleCount; i++) {
+                    // Move particles along z-axis (time dimension)
+                    positions[i * 3 + 2] += 0.1;
+                    
+                    // Wrap around when they reach the end
+                    if (positions[i * 3 + 2] > 25) {
+                        positions[i * 3 + 2] = -25;
+                        
+                        // Randomize position when they wrap
+                        positions[i * 3] = (Math.random() - 0.5) * 20;
+                        positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                    }
+                }
+                particles.attributes.position.needsUpdate = true;
+                
+                // Pulsate wormholes
+                const time = Date.now() * 0.001;
+                wormhole.scale.setScalar(1 + Math.sin(time) * 0.1);
+                wormholeExit.scale.setScalar(1 + Math.cos(time) * 0.1);
+                
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            });
+        }
+        
+        // Initialize all simulations when the page loads
+        window.addEventListener('load', () => {
+            initDNASimulation();
+            initRNASimulation();
+            initBARMMANDSimulation();
+            initTimeTravelSimulation();
+            
+            // Initialize other canvas elements
+            document.querySelectorAll('.module-thumbnail canvas').forEach(canvas => {
+                if (!canvas.id || canvas.id === '') {
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                    camera.position.z = 5;
+                    
+                    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+                    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                    
+                    // Add a simple rotating cube as placeholder
+                    const geometry = new THREE.BoxGeometry();
+                    const material = new THREE.MeshBasicMaterial({ 
+                        color: 0x00c9ff,
+                        wireframe: true
+                    });
+                    const cube = new THREE.Mesh(geometry, material);
+                    scene.add(cube);
+                    
+                    function animate() {
+                        requestAnimationFrame(animate);
+                        cube.rotation.x += 0.01;
+                        cube.rotation.y += 0.01;
+                        renderer.render(scene, camera);
+                    }
+                    
+                    animate();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
